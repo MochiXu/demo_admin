@@ -18,18 +18,19 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestURI=request.getRequestURI();
-        System.out.println("preHandle拦截的请求路径是："+requestURI);
+        System.out.println("拦截器preHandle正在检查请求路径："+requestURI);
 
         //登陆检查逻辑
         HttpSession session=request.getSession();
-        Object loginUser=session.getAttribute("loginUer");
+        Object loginUser=session.getAttribute("loginUser");
 
         if(loginUser!=null) {
-            System.out.println("loginUser不是null===" + loginUser);
+            System.out.println("session中检测到用户->拦截器preHandle放行："+requestURI);
             return true;
         }
         else {
             //进行拦截，并跳转到登录页
+            System.out.println("session中未检测到用户->拦截器preHandle已阻止：" + loginUser);
             request.setAttribute("msg","被拦截器拦截");
             //使用请求域进行转发 [无论是请求转发还是请求包含，使用的都是同一个request和response]
             request.getRequestDispatcher("/").forward(request,response);
